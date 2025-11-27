@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Dashboard - SmartCRM</title>
+    <link rel="stylesheet" href="../css/reset.css" />
+    <link rel="stylesheet" href="../css/main.css" />
+    <link rel="stylesheet" href="../css/dashboard.css" />
+  </head>
+  <body>
+    <!-- Global Modal Container -->
+    <div id="globalModal" class="modal hidden">
+      <div class="modal-content">
+        <p id="modalMessage">Xabaringiz shu yerda chiqadi</p>
+        <div class="modal-actions">
+          <button id="modalConfirm" class="btn-primary">OK</button>
+          <button id="modalCancel">Bekor</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Dark Mode toggle -->
+    <button id="themeToggle" class="theme-toggle" aria-label="Toggle Dark Mode">
+      🌙
+    </button>
+
+    <!-- Hamburger for mobile -->
+    <button id="sidebarToggle" class="sidebar-toggle" aria-label="Toggle Menu">
+      ☰
+    </button>
+
+    <div class="sidebar">
+      <ul>
+        <li><a href="./dashboard.html" class="active">Dashboard</a></li>
+        <li><a href="./admins.html">Adminlar</a></li>
+        <li><a href="./teachers.html">O'qituvchilar</a></li>
+        <li><a href="./students.html">O'quvchilar</a></li>
+        <li><a href="./groups.html">Guruhlar</a></li>
+        <li><a href="./attendances.html">Davomat</a></li>
+        <li><a href="./payments.html">To'lovlar</a></li>
+      </ul>
+    </div>
+
+    <div class="main-content">
+      <header class="header">
+        <h2>Hush kelibsiz, <span id="userName"></span></h2>
+        <div class="header-actions">
+          <button id="btnLogout" class="btn-logout">Chiqish</button>
+        </div>
+      </header>
+
+      <section class="stats-grid">
+        <div class="card">
+          <h4>O'quvchilar</h4>
+          <p id="studentsCount">–</p>
+        </div>
+        <div class="card">
+          <h4>Guruhlar</h4>
+          <p id="groupsCount">–</p>
+        </div>
+        <div class="card">
+          <h4>Ustozlar</h4>
+          <p id="teachersCount">–</p>
+        </div>
+        <div class="card" id="adminsCard">
+          <h4>Adminlar</h4>
+          <p id="adminsCount">–</p>
+        </div>
+        <div class="card payment-card">
+          <h4>To'lov qilganlar</h4>
+          <p>
+            <span id="paidCount">–</span> /
+            <span id="studentsCountDup">–</span> (<span id="paidPercent">–</span
+            >%)
+          </p>
+        </div>
+        <div class="card" id="totalAmountCard">
+          <h4>Tushum</h4>
+          <p id="totalCollected">–</p>
+        </div>
+      </section>
+
+      <!-- To‘lov qilmagan o‘quvchilar (oddiy Admin uchun) -->
+      <section id="unpaidSection" class="unpaid-section hidden">
+        <h3>
+          To'lov qilmagan o'quvchilar soni:
+          <span id="unpaidCount">0</span>
+        </h3>
+        <br />
+        <input
+          type="text"
+          id="unpaidSearch"
+          placeholder="Qidiruv (ism, familiya, telefon, guruh...)"
+        />
+        <table class="data-table" id="unpaidTable">
+          <thead>
+            <tr>
+              <th data-sort="firstName">Ism</th>
+              <th data-sort="lastName">Familya</th>
+              <th data-sort="phoneNumber">Telefon</th>
+              <th data-sort="groupName">Guruh</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </section>
+    </div>
+
+    <script src="../js/lib/jquery.min.js"></script>
+    <script src="../js/main.js"></script>
+    <script src="../js/dashboard.js"></script>
+  </body>
+</html>

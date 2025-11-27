@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SmartCRM – Adminlar</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../css/reset.css" />
+    <link rel="stylesheet" href="../css/main.css" />
+    <link rel="stylesheet" href="../css/admins.css" />
+  </head>
+  <body>
+    <!-- Global Confirm/Error Modal -->
+    <div id="globalModal" class="modal hidden">
+      <div class="modal-content">
+        <p id="modalMessage"></p>
+        <div class="modal-actions">
+          <button id="modalConfirm" class="btn-primary">Ha</button>
+          <button id="modalCancel">Bekor</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Create Admin Modal -->
+    <div id="adminFormModal" class="modal hidden">
+      <div class="modal-content">
+        <h3 id="adminFormTitle">Yangi admin</h3>
+        <form id="adminForm">
+          <div class="input-group">
+            <label for="adminUsername">Foydalanuvchi nomi</label>
+            <input
+              id="adminUsername"
+              type="text"
+              required
+              minlength="4"
+              placeholder="Kamida 4 ta belgidan"
+            />
+          </div>
+          <div class="input-group password-wrapper">
+            <label for="adminPassword">Parol</label>
+            <input
+              id="adminPassword"
+              type="password"
+              required
+              minlength="6"
+              placeholder="Kamida 6 ta belgidan"
+            />
+            <svg
+              id="toggleAdminPassword"
+              class="toggle-password"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg"
+              stroke-width="2"
+            >
+              <path
+                id="eyeOn"
+                d="M1.05 12C2.8 7.3 7.3 4 12 4s9.2 3.3 10.95 8C21.2 16.7 16.7 20 12 20S2.8 16.7 1.05 12z"
+              />
+              <circle id="pupil" cx="12" cy="12" r="3" />
+              <path id="eyeOff" d="M1 1l22 22" style="display: none" />
+            </svg>
+          </div>
+          <div class="modal-actions">
+            <button type="submit" class="btn-primary">Saqlash</button>
+            <button type="button" id="adminFormCancel">Bekor</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Edit Admin Modal -->
+    <div id="editAdminModal" class="modal hidden">
+      <div class="modal-content">
+        <h3>Adminni tahrirlash</h3>
+        <form id="editAdminForm">
+          <div class="input-group">
+            <label for="editUsername">Foydalanuvchi nomi</label>
+            <input id="editUsername" type="text" required minlength="4" />
+
+            <label for="editPassword">Foydalanuvchi paroli</label>
+            <input id="editPassword" type="password" minlength="6" />
+          </div>
+          <div class="modal-actions">
+            <button type="submit" class="btn-primary">Saqlash</button>
+            <button type="button" id="editAdminCancel">Bekor</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Dark Mode & Sidebar Toggle -->
+    <button id="themeToggle" class="theme-toggle">🌙</button>
+    <button id="sidebarToggle" class="sidebar-toggle">☰</button>
+
+    <div class="sidebar">
+      <ul>
+        <li><a href="./dashboard.html">Dashboard</a></li>
+        <li><a href="./admins.html" class="active">Adminlar</a></li>
+        <li><a href="./teachers.html">O'qituvchilar</a></li>
+        <li><a href="./students.html">O'quvchilar</a></li>
+        <li><a href="./groups.html">Guruhlar</a></li>
+        <li><a href="./attendances.html">Davomat</a></li>
+        <li><a href="./payments.html">To'lovlar</a></li>
+      </ul>
+    </div>
+
+    <div class="main-content">
+      <header class="header">
+        <h2>Adminlar boshqaruvi</h2>
+        <button id="btnLogout" class="btn-logout">Chiqish</button>
+      </header>
+
+      <div class="toolbar">
+        <button id="btnAddAdmin" class="btn btn-primary">+ Yangi admin</button>
+        <input type="text" id="adminSearch" placeholder="Qidiruv (nomi)" />
+      </div>
+
+      <table class="data-table" id="adminsTable">
+        <thead>
+          <tr>
+            <th data-sort="username">Foydalanuvchi nomi</th>
+            <th data-sort="isActive">Holat</th>
+            <th>Amallar</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+
+    <script src="../js/lib/jquery.min.js"></script>
+    <script src="../js/main.js"></script>
+    <script src="../js/admins.js"></script>
+    <script>
+      $("#toggleAdminPassword").on("click", function () {
+        const $pw = $("#adminPassword");
+        const type = $pw.attr("type") === "password" ? "text" : "password";
+        $pw.attr("type", type);
+        $("#eyeOff").toggle(type === "text");
+      });
+    </script>
+  </body>
+</html>

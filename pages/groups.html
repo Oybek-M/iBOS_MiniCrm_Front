@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Guruhlar – SmartCRM</title>
+    <link rel="stylesheet" href="../css/reset.css" />
+    <link rel="stylesheet" href="../css/main.css" />
+    <link rel="stylesheet" href="../css/groups.css" />
+  </head>
+  <body>
+    <!-- Global Confirm Modal -->
+    <div id="globalModal" class="modal hidden">
+      <div class="modal-content">
+        <p id="modalMessage"></p>
+        <div class="modal-actions">
+          <button id="modalConfirm" class="btn-primary">Ha</button>
+          <button id="modalCancel">Bekor</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Group Form Modal -->
+    <div id="groupFormModal" class="modal hidden">
+      <div class="modal-content">
+        <h3 id="groupFormTitle">Yangi guruh</h3>
+        <form id="groupForm">
+          <label for="gfName">Guruh nomi</label>
+          <input id="gfName" type="text" required />
+          <label for="gfTeacher">Ustozni tanlang</label>
+          <select id="gfTeacher" required>
+            <option value="">– Tanlang –</option>
+          </select>
+          <div class="modal-actions">
+            <button type="submit" class="btn-primary">Saqlash</button>
+            <button type="button" id="groupFormCancel">Bekor</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Group View Modal -->
+    <div id="groupViewModal" class="modal hidden">
+      <div class="modal-content">
+        <h3>Guruh tafsilotlari</h3>
+        <br />
+        <p><strong>Guruh nomi:</strong> <span id="viewGName"></span></p>
+        <p><strong>Ustoz:</strong> <span id="viewGTeacher"></span></p>
+        <!-- Yangi qo'shildi: o'quvchilar soni -->
+        <p><strong>O'quvchilar soni:</strong> <span id="viewGCount">0</span></p>
+        <p><strong>O'quvchilar:</strong></p>
+        <ul id="viewGStudents"></ul>
+        <div class="modal-actions">
+          <button id="groupViewClose">Yopish</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Dark Mode & Menu Toggle -->
+    <button id="themeToggle" class="theme-toggle">🌙</button>
+    <button id="sidebarToggle" class="sidebar-toggle">☰</button>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+      <ul>
+        <li><a href="./dashboard.html">Dashboard</a></li>
+        <li><a href="./admins.html">Adminlar</a></li>
+        <li><a href="./teachers.html">O‘qituvchilar</a></li>
+        <li><a href="./students.html">O‘quvchilar</a></li>
+        <li><a href="./groups.html" class="active">Guruhlar</a></li>
+        <li><a href="./attendances.html">Davomat</a></li>
+        <li><a href="./payments.html">To‘lovlar</a></li>
+      </ul>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+      <header class="header">
+        <h2>Guruhlar boshqaruvi</h2>
+        <button id="btnLogout" class="btn-logout">Chiqish</button>
+      </header>
+
+      <div class="toolbar">
+        <button id="btnAddGroup" class="btn-primary">+ Yangi guruh</button>
+      </div>
+
+      <table class="data-table" id="groupsTable">
+        <thead>
+          <tr>
+            <th data-sort="name">Guruh nomi</th>
+            <th data-sort="teacherName">Ustoz</th>
+            <th>Amallar</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+
+    <script src="../js/lib/jquery.min.js"></script>
+    <script src="../js/main.js"></script>
+    <script src="../js/groups.js"></script>
+  </body>
+</html>

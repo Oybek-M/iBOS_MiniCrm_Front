@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="uz">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>To‘lovlar – SmartCRM</title>
+    <link rel="stylesheet" href="../css/reset.css" />
+    <link rel="stylesheet" href="../css/main.css" />
+    <link rel="stylesheet" href="../css/payments.css" />
+  </head>
+  <body>
+    <!-- Global Confirm Modal -->
+    <div id="globalModal" class="modal hidden">
+      <div class="modal-content">
+        <p id="modalMessage"></p>
+        <div class="modal-actions">
+          <button id="modalConfirm" class="btn-primary">Ha</button>
+          <button id="modalCancel">Bekor</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Payment Form Modal -->
+    <div id="paymentFormModal" class="modal hidden">
+      <div class="modal-content">
+        <h3 id="paymentFormTitle">Yangi to'lov</h3>
+        <form id="paymentForm">
+          <label for="pfStudent">O'quvchi</label>
+          <!-- <select id="pfStudent" required>
+            <option value="">- Tanlang -</option>
+          </select> -->
+          <label for="pfStudentInput">O'quvchi</label>
+          <input
+            id="pfStudentInput"
+            list="pfStudentList"
+            required
+            placeholder="Ism bo'yicha qidirish…"
+          />
+          <datalist id="pfStudentList"></datalist>
+          <label for="pfAmount">Miqdor (UZS)</label>
+          <input
+            id="pfAmount"
+            type="number"
+            required
+            min="1"
+            max="1000000000"
+            title="1 dan 1000000000 gacha"
+          />
+          <label for="pfType">To'lov turi</label>
+          <select id="pfType" required>
+            <option value="">- Tanlang -</option>
+            <option value="1">Naqd</option>
+            <option value="2">Click</option>
+          </select>
+          <label for="pfNotes">Izoh</label>
+          <textarea id="pfNotes" rows="3"></textarea>
+          <div class="modal-actions">
+            <button type="submit" class="btn-primary">Saqlash</button>
+            <button type="button" id="paymentFormCancel">Bekor</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Payment View Modal -->
+    <div id="paymentViewModal" class="modal hidden">
+      <div class="modal-content">
+        <h3>To‘lov tafsilotlari</h3>
+        <p><strong>Ism, Familya:</strong> <span id="viewPStudent"></span></p>
+        <p><strong>Telefon:</strong> <span id="viewPPhone"></span></p>
+        <p><strong>Guruh:</strong> <span id="viewPGroup"></span></p>
+        <p><strong>Miqdor:</strong> <span id="viewPAmount"></span> UZS</p>
+        <p><strong>To‘lov turi:</strong> <span id="viewPType"></span></p>
+        <p><strong>Sana:</strong> <span id="viewPDate"></span></p>
+        <p><strong>Izoh:</strong> <span id="viewPNotes"></span></p>
+        <div class="modal-actions">
+          <button id="paymentViewClose">Yopish</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Toggles -->
+    <button id="themeToggle" class="theme-toggle">🌙</button>
+    <button id="sidebarToggle" class="sidebar-toggle">☰</button>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+      <ul>
+        <li><a href="./dashboard.html">Dashboard</a></li>
+        <li><a href="./admins.html">Adminlar</a></li>
+        <li><a href="./teachers.html">O‘qituvchilar</a></li>
+        <li><a href="./students.html">O‘quvchilar</a></li>
+        <li><a href="./groups.html">Guruhlar</a></li>
+        <li><a href="./attendances.html">Davomat</a></li>
+        <li><a href="./payments.html" class="active">To‘lovlar</a></li>
+      </ul>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+      <header class="header">
+        <h2>To'lovlar boshqaruvi</h2>
+        <button id="btnLogout" class="btn-logout">Chiqish</button>
+      </header>
+
+      <div class="toolbar">
+        <!-- Yangi to‘lov -->
+        <button id="btnAddPayment" class="btn-primary">+ Yangi to‘lov</button>
+        <!-- Kunlik hisobot (admin) -->
+        <button id="btnDownloadDaily" class="btn-primary">
+          📊 Kunlik hisobot (.xlsx)
+        </button>
+        <!-- To‘liq hisobot (superadmin) -->
+        <button id="btnDownloadAll" class="btn-primary">
+          📊 To'liq hisobot (.xlsx)
+        </button>
+
+        <!-- Filter va qidiruv -->
+        <select id="filterType">
+          <option value="">Hammasi</option>
+          <option value="1">Naqd</option>
+          <option value="2">Click</option>
+        </select>
+        <input
+          type="text"
+          id="paymentSearch"
+          placeholder="Qidiruv (ism, guruh, sana...)"
+        />
+      </div>
+
+      <table class="data-table" id="paymentsTable">
+        <thead>
+          <tr>
+            <th data-sort="studentName">Ism</th>
+            <th data-sort="groupName">Guruh</th>
+            <th data-sort="amount">Miqdor</th>
+            <th data-sort="type">Tur</th>
+            <th data-sort="date">Sana</th>
+            <th>Amallar</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+
+    <script src="../js/lib/jquery.min.js"></script>
+    <script src="../js/main.js"></script>
+    <script src="../js/payments.js"></script>
+  </body>
+</html>

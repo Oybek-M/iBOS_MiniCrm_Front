@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>O'qituvchilar – SmartCRM</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../css/reset.css" />
+    <link rel="stylesheet" href="../css/main.css" />
+    <link rel="stylesheet" href="../css/teacher.css" />
+  </head>
+  <body>
+    <!-- Global Confirm Modal -->
+    <div id="globalModal" class="modal hidden">
+      <div class="modal-content">
+        <p id="modalMessage"></p>
+        <div class="modal-actions">
+          <button id="modalConfirm" class="btn-primary">Ha</button>
+          <button id="modalCancel">Bekor</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Teacher Form Modal -->
+    <div id="teacherFormModal" class="modal hidden">
+      <div class="modal-content">
+        <h1 id="teacherFormTitle"><b>Yangi o‘qituvchi</b></h1>
+        <br />
+        <form id="teacherForm">
+          <label for="tfFirstName">Ismi</label>
+          <input id="tfFirstName" type="text" required />
+          <label for="tfLastName">Familyasi</label>
+          <input id="tfLastName" type="text" required />
+          <label for="tfPhoneNumber">Telefon raqami</label>
+          <input
+            id="tfPhoneNumber"
+            type="text"
+            placeholder="+998901234567"
+            required
+            minlength="13"
+            maxlength="13"
+            pattern="^\+998\d{9}$"
+            title="Telefon raqami +998901234567 formatida bo'lishi kerak"
+          />
+          <div class="modal-actions">
+            <button type="submit" class="btn-primary">Saqlash</button>
+            <button type="button" id="teacherFormCancel">Bekor</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Teacher View Modal -->
+    <div id="teacherViewModal" class="modal hidden">
+      <div class="modal-content">
+        <h3>O'qituvchi tafsilotlari</h3>
+        <br />
+        <p>
+          <strong>Ism, Familya:</strong> <br />
+          <span id="viewName"></span>
+        </p>
+        <p><strong>Telefon:</strong> <span id="viewPhone"></span></p>
+        <p><strong>Guruhlar:</strong></p>
+        <ul id="viewGroupsList"></ul>
+        <br />
+        <div class="modal-actions">
+          <button id="teacherViewClose">Yopish</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Dark Mode & Menu Toggles -->
+    <button id="themeToggle" class="theme-toggle">🌙</button>
+    <button id="sidebarToggle" class="sidebar-toggle">☰</button>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+      <ul>
+        <li><a href="./dashboard.html">Dashboard</a></li>
+        <li><a href="./admins.html">Adminlar</a></li>
+        <li><a href="./teachers.html" class="active">O‘qituvchilar</a></li>
+        <li><a href="./students.html">O‘quvchilar</a></li>
+        <li><a href="./groups.html">Guruhlar</a></li>
+        <li><a href="./attendances.html">Davomat</a></li>
+        <li><a href="./payments.html">To‘lovlar</a></li>
+      </ul>
+    </div>
+
+    <!-- Main Panel -->
+    <div class="main-content">
+      <header class="header">
+        <h2>O'qituvchilar boshqaruvi</h2>
+        <button id="btnLogout" class="btn-logout">Chiqish</button>
+      </header>
+
+      <div class="toolbar">
+        <button id="btnAddTeacher" class="btn-primary">
+          + Yangi o'qituvchi
+        </button>
+        <input
+          type="text"
+          id="teacherSearch"
+          placeholder="O'qituvchi qidiruv..."
+        />
+      </div>
+
+      <table class="data-table" id="teachersTable">
+        <thead>
+          <tr>
+            <th data-sort="firstName">Ism</th>
+            <th data-sort="lastName">Familya</th>
+            <th data-sort="phoneNumber">Telefon</th>
+            <th>Amallar</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+
+    <script src="../js/lib/jquery.min.js"></script>
+    <script src="../js/main.js"></script>
+    <script src="../js/teachers.js"></script>
+  </body>
+</html>

@@ -1,0 +1,445 @@
+/* admins.css | SmartCRM Adminlar Sahifasi */
+
+/* Body & Layout */
+body {
+    font-family: 'Poppins', sans-serif;
+    background: #fafafa;
+    color: #333;
+    /* margin: 0; */
+    display: flex;
+}
+
+/* Global modal (confirm/error) */
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 500;
+}
+
+.modal.hidden {
+    display: none;
+}
+
+.modal-content {
+    background: #fff;
+    padding: 1.5rem;
+    border-radius: 8px;
+    width: 90%;
+    max-width: 360px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    text-align: center;
+}
+
+.modal-content p {
+    margin-bottom: 1.5rem;
+    color: #333;
+    font-size: 1rem;
+}
+
+.modal-actions {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+}
+
+.modal-actions button {
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    cursor: pointer;
+}
+
+.modal-actions .btn-primary {
+    background: #3b82f6;
+    color: #fff;
+}
+
+.modal-actions .btn-primary:hover {
+    background: #2563eb;
+}
+
+.modal-actions #modalCancel {
+    background: #e5e7eb;
+}
+
+.modal-actions #modalCancel:hover {
+    background: #d1d5db;
+}
+
+/* Dark-mode overrides */
+body.dark-mode {
+    background: #121212;
+    color: #e0e0e0;
+}
+
+body.dark-mode .modal-content {
+    background: #1e1e1e;
+}
+
+body.dark-mode .modal-content p {
+    color: #e0e0e0;
+}
+
+/* Sidebar */
+.sidebar {
+    background: #2e3a46;
+    width: 220px;
+    min-width: 220px;
+    height: 100vh;
+    padding-top: 2rem;
+    position: fixed;
+    top: 0;
+    left: 0;
+    transition: transform 0.3s ease;
+    z-index: 250;
+}
+
+.sidebar ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.sidebar li+li {
+    margin-top: 1rem;
+}
+
+.sidebar a {
+    color: #fff;
+    text-decoration: none;
+    padding: 0.75rem 1rem;
+    display: block;
+    font-weight: 500;
+    border-left: 4px solid transparent;
+    transition: background 0.2s, border-color 0.2s;
+}
+
+.sidebar a:hover,
+.sidebar a.active {
+    background: #3e4b59;
+    border-color: #3b82f6;
+}
+
+body.dark-mode .sidebar {
+    background: #1f2937;
+}
+
+body.dark-mode .sidebar a {
+    color: #cbd5e1;
+}
+
+/* Hamburger toggle */
+.sidebar-toggle {
+    display: none;
+    position: fixed;
+    top: 1rem;
+    left: 1rem;
+    background: none;
+    border: none;
+    font-size: 1.8rem;
+    color: #333;
+    z-index: 300;
+    cursor: pointer;
+}
+
+body.dark-mode .sidebar-toggle {
+    color: #e0e0e0;
+}
+
+@media (max-width: 992px) {
+    .sidebar {
+        transform: translateX(-100%);
+        padding-top: 70px;
+        /* header offset */
+    }
+
+    .sidebar.open {
+        transform: translateX(0);
+    }
+
+    .sidebar-toggle {
+        display: block;
+    }
+}
+
+/* Main content */
+.main-content {
+    margin-left: 220px;
+    padding: 2rem;
+    flex: 1;
+    transition: margin-left 0.3s ease;
+}
+
+.main-content.shifted {
+    margin-left: 220px;
+}
+
+@media (max-width: 992px) {
+    .main-content {
+        margin-left: 0;
+    }
+}
+
+/* Header */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.header-actions {
+    display: flex;
+    align-items: center;
+}
+
+.btn-logout {
+    background: #ef4444;
+    color: #fff;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.2s;
+    margin-right: 2rem;
+}
+
+.btn-logout:hover {
+    background: #dc2626;
+}
+
+body.dark-mode .btn-logout {
+    background: #b91c1c;
+}
+
+/* Theme toggle */
+.theme-toggle {
+    position: fixed;
+    top: 1rem;
+    right: 1rem;
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    opacity: 0.7;
+    z-index: 200;
+}
+
+.theme-toggle:hover {
+    opacity: 1;
+}
+
+/* Toolbar */
+.toolbar {
+    margin: 1.5rem 0;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.toolbar #btnAddAdmin {
+    margin-right: auto;
+    background-color: #3b82f6;
+    color: #fff;
+    padding: .5rem 1rem;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: .9rem;
+    margin-right: .5rem;
+    transition: background 0.2s, color 0.2s;
+}
+
+.toolbar #btnAddAdmin:hover {
+    background-color: #2563eb;
+    color: #fff;
+}
+
+/* Yangi admin tugmasini kattaroq va primary rangda */
+.toolbar input {
+    padding: 0.5rem 0.75rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+/* Qidiruv inputini chiroyli qilish */
+.toolbar input#adminSearch {
+    max-width: 35%;
+    flex: 1;
+    padding: 0.5rem 0.75rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 0.95rem;
+    transition: border-color 0.2s;
+}
+
+.toolbar input#adminSearch:focus {
+    outline: none;
+    border-color: #3b82f6;
+}
+
+/* Data table */
+.data-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.data-table th,
+.data-table td {
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid #e5e7eb;
+    text-align: left;
+}
+
+.data-table th {
+    cursor: pointer;
+    position: relative;
+}
+
+.data-table th.asc::after,
+.data-table th.desc::after {
+    content: '';
+    position: absolute;
+    right: 8px;
+    top: 50%;
+    width: 0;
+    height: 0;
+    border: 6px solid transparent;
+}
+
+.data-table th.asc::after {
+    border-bottom-color: #333;
+    margin-top: -12px;
+}
+
+.data-table th.desc::after {
+    border-top-color: #333;
+    margin-top: 0;
+}
+
+body.dark-mode .data-table th,
+body.dark-mode .data-table td {
+    border-color: #444;
+    color: #e0e0e0;
+}
+
+/* Action buttons */
+.actBtn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    margin-right: .5rem;
+    font-size: 1.2rem;
+    transition: color 0.2s;
+}
+
+.actBtn:hover {
+    color: #3b82f6;
+}
+
+/* Admin form modal */
+#adminFormModal .modal-content h3 {
+    margin-bottom: 1rem;
+}
+
+#adminFormModal label {
+    display: block;
+    margin-top: 0.75rem;
+    font-weight: 500;
+}
+
+#adminFormModal input {
+    width: 100%;
+    padding: 0.5rem;
+    margin-top: 0.25rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+#adminFormModal input:focus {
+    outline: none;
+    border-color: #3b82f6;
+}
+
+
+/* — password-wrapper: parol maydoni uchun container */
+.password-wrapper {
+    position: relative;
+    margin-bottom: 1rem;
+    /* agar kerak bo‘lsa, form ichidagi bo‘sh joy uchun */
+}
+
+/* input ichida to‘liq kenglik, lekin eye tugma uchun joy ajratilgan */
+.password-wrapper input {
+    width: 100%;
+    padding: 0.6rem 2.5rem 0.6rem 0.6rem;
+    /* to‘g‘ri vertical align va right padding */
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 0.95rem;
+    box-sizing: border-box;
+}
+
+/* eye tugma (SVG) */
+.toggle-password {
+    position: absolute;
+    top: 65%;
+    right: 0.75rem;
+    /* input ning o‘ng chetida biroz ichkarida */
+    transform: translateY(-50%);
+    cursor: pointer;
+    opacity: 0.6;
+    width: 20px;
+    /* SVG ga mos o‘lcham */
+    height: 20px;
+    transition: opacity 0.2s;
+}
+
+.toggle-password:hover {
+    opacity: 1;
+}
+
+/* Dark-mode uchun moslashuv */
+body.dark-mode .password-wrapper input {
+    background: #2c2c2c;
+    color: #e0e0e0;
+    border-color: #444;
+}
+
+#adminFormModal {
+    z-index: 600;
+    /* form modali confirm ustida turadi */
+}
+
+#globalModal {
+    z-index: 500;
+}
+
+.lightColor {
+    color: #f3f4f6;
+}
+
+/* Responsive adjustments */
+@media (min-width: 993px) {
+    .sidebar {
+        transform: translateX(0);
+    }
+}
+
+@media (max-width: 992px) {
+    .btn-logout {
+        margin-right: 0rem;
+    }
+
+    .header {
+        margin-top: 40px;
+    }
+}

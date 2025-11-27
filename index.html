@@ -1,0 +1,118 @@
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SmartCRM Login</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./css/reset.css" />
+    <link rel="stylesheet" href="./css/main.css" />
+  </head>
+  <body class="login-a">
+    <button id="themeToggle" class="theme-toggle" aria-label="Toggle Dark Mode">
+      🌙
+    </button>
+    <div class="login-card">
+      <h1>SmartCRM</h1>
+      <p>
+        Xush kelibsiz! <br />
+        Iltimos, hisobingizga kiring.
+      </p>
+      <form id="loginForm">
+        <div class="input-group">
+          <label for="username">Foydalanuvchi nomi</label>
+          <input
+            id="username"
+            name="username"
+            type="text"
+            placeholder="Foydalanuvchi nomingizni kiriting"
+            required
+          />
+        </div>
+        <div class="input-group password-wrapper">
+          <label for="password">Parol</label>
+          <input
+            id="password"
+            name="password"
+            type="password"
+            placeholder="Parolingizni kiriting"
+            required
+          />
+          <!-- Eye icon (SVG) -->
+          <svg
+            id="togglePassword"
+            class="toggle-password"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+            xmlns="http://www.w3.org/2000/svg"
+            stroke-width="2"
+          >
+            <path
+              id="eyeOn"
+              d="M1.05 12C2.8 7.3 7.3 4 12 4s9.2 3.3 10.95 8C21.2 16.7 16.7 20 12 20S2.8 16.7 1.05 12z"
+            />
+            <circle id="pupil" cx="12" cy="12" r="3" />
+            <path id="eyeOff" d="M1 1l22 22" style="display: none" />
+          </svg>
+        </div>
+        <button type="submit" class="btn-login">Kirish</button>
+        <div id="loginError" class="error-msg"></div>
+      </form>
+    </div>
+
+    <!-- jQuery - v3.6.4 -->
+    <script src="./js/lib/jquery.min.js"></script>
+    <script src="./js/main.js"></script>
+    <script>
+      // Dark Mode
+      function applyDarkMode(on) {
+        $("body").toggleClass("dark-mode", on);
+        $("#themeToggle").text(on ? "☀️" : "🌙");
+      }
+      const darkStored = localStorage.getItem("darkMode") === "true";
+      applyDarkMode(darkStored);
+      $("#themeToggle").on("click", () => {
+        const now = !$("body").hasClass("dark-mode");
+        applyDarkMode(now);
+        localStorage.setItem("darkMode", now);
+      });
+
+      // Show/hide password logic
+      $("#togglePassword").on("click", function () {
+        const pwd = $("#password");
+        const type = pwd.attr("type") === "password" ? "text" : "password";
+        pwd.attr("type", type);
+        // Toggle eye/off line
+        $("#eyeOff").toggle(type === "text");
+      });
+
+      // Login form submit with backend Message handling
+      $("#loginForm").on("submit", function (e) {
+        e.preventDefault();
+        $("#loginError").text(""); // clear previous error
+        const payload = {
+          username: $("#username").val(),
+          password: $("#password").val(),
+        };
+        $.ajax({
+          url: "http://localhost:5070/api/auth/login",
+          method: "POST",
+          contentType: "application/json",
+          data: JSON.stringify(payload),
+          success(res) {
+            localStorage.setItem("jwtToken", res.token);
+            window.location = "./pages/dashboard.html";
+          },
+          error(xhr) {
+            const err =
+              xhr.responseJSON?.Message || "Tizimga kirishda xatolik yuz berdi";
+            $("#loginError").text(err);
+          },
+        });
+      });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,402 @@
+/* ---------------------------------------------------
+   Base resets already in reset.css
+   Main globals in main.css
+   --------------------------------------------------- */
+
+/* ——— Sidebar (same as dashboard) ——— */
+body {
+    font-family: 'Poppins', sans-serif;
+    background: #fafafa;
+    color: #333;
+    margin: 0;
+    /* display: flex; */
+}
+
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 220px;
+  height: 100vh;
+  background: #2e3a46;
+  padding-top: 2rem;
+  overflow-y: auto;
+  transition: transform 0.3s ease;
+  z-index: 250;
+}
+
+.sidebar ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.sidebar li+li {
+  margin-top: 1rem;
+}
+
+.sidebar a {
+  display: block;
+  padding: 0.75rem 1rem;
+  color: #fff;
+  text-decoration: none;
+  font-weight: 500;
+  border-left: 4px solid transparent;
+  transition: background 0.2s, border-color 0.2s;
+}
+
+.sidebar a:hover,
+.sidebar a.active {
+  background: #3e4b59;
+  border-color: #3b82f6;
+}
+
+/* ——— Hamburger / Sidebar Toggle ——— */
+.sidebar-toggle {
+  display: none;
+  position: fixed;
+  top: 1rem;
+  left: 1rem;
+  background: none;
+  border: none;
+  font-size: 1.8rem;
+  cursor: pointer;
+  color: #333;
+  z-index: 300;
+  transition: color 0.2s;
+}
+
+body.dark-mode .sidebar-toggle {
+  color: #e0e0e0;
+}
+
+/* ——— Main Content ——— */
+.main-content {
+  margin-left: 220px;
+  padding: 2rem;
+  transition: margin-left 0.3s ease;
+}
+
+/* ——— Header & Logout ——— */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.header h2 {
+  font-family: Arial, Helvetica, sans-serif;
+  font-weight: bold;
+  font-size: 1.5rem;
+  color: #333;
+  margin: 0;
+}
+
+body.dark-mode .header h2 {
+  color: #e0e0e0;
+}
+
+.btn-logout {
+  background: #ef4444;
+  color: #fff;
+  padding: .5rem 1rem;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.2s;
+  margin-right: 2rem;
+}
+
+.btn-logout:hover {
+  background: #dc2626;
+}
+
+.theme-toggle {
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  z-index: 200;
+  opacity: .7;
+}
+
+.theme-toggle:hover {
+  opacity: 1;
+}
+
+/* ——— Toolbar & Table ——— */
+.toolbar {
+  margin: 1rem 0 1rem 0;
+}
+
+.toolbar button {
+  background-color: #3b82f6;
+  color: #fff ;
+  padding: .5rem 1rem;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: .9rem;
+  margin-right: .5rem;
+  transition: background 0.2s, color 0.2s;
+}
+
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #fff;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+}
+
+.data-table th,
+.data-table td {
+  padding: .75rem 1rem;
+  border-bottom: 1px solid #e5e7eb;
+  text-align: left;
+}
+
+.data-table thead {
+  background: #f3f4f6;
+  font-weight: 600;
+}
+
+.data-table tbody tr:hover {
+  background: #f9fafb;
+}
+
+body.dark-mode .data-table tbody tr:hover {
+  background: #1e1e1e;
+  color: #e0e0e0;
+}
+
+.data-table td:last-child {
+  white-space: nowrap;
+}
+
+.actBtn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  margin-right: .5rem;
+  font-size: 1.2rem;
+  transition: color 0.2s;
+}
+
+.actBtn:hover {
+  color: #3b82f6;
+}
+
+/* ——— Modals ——— */
+/* Global confirm modal sits on top */
+#globalModal {
+  z-index: 1000;
+}
+
+/* Form & View modals under the global confirm */
+#teacherFormModal,
+#teacherViewModal {
+  z-index: 900;
+}
+
+/* Base modal rules */
+.modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  display: none;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal:not(.hidden) {
+  display: flex;
+}
+
+.modal-content {
+  background: #fff;
+  padding: 1.5rem;
+  border-radius: 8px;
+  width: 90%;
+  max-width: 360px;
+  text-align: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+#teacherViewModal .modal-content p {
+  text-align: left;
+}
+
+.modal-content label,
+.modal-content input,
+.modal-content p {
+  width: 90%;
+  margin-bottom: .75rem;
+}
+
+.modal-content input {
+  padding: .5rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: center;
+  gap: .5rem;
+}
+
+.modal-actions button {
+  padding: .5rem 1rem;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: .9rem;
+}
+
+.modal-actions .btn-primary {
+  background: #3b82f6;
+  color: #fff;
+}
+
+.modal-actions .btn-primary:hover {
+  background: #2563eb;
+}
+
+.modal-actions #modalCancel,
+.modal-actions #teacherFormCancel,
+.modal-actions #teacherViewClose {
+  background: #e5e7eb;
+  color: #333;
+}
+
+.modal-actions #modalCancel:hover,
+.modal-actions #teacherFormCancel:hover,
+.modal-actions #teacherViewClose:hover {
+  background: #d1d5db;
+}
+
+/* Adding small sign for search */
+[data-sort].asc::after  { content: " ▲"; font-size: .75rem; }
+[data-sort].desc::after { content: " ▼"; font-size: .75rem; }
+
+/* Search input styling */
+#teacherSearch {
+  padding: .5rem;
+  width: 200px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  margin-right: 1rem;
+}
+
+
+/* ——— Dark Mode Overrides ——— */
+body.dark-mode {
+  background: #121212;
+  color: #e0e0e0;
+}
+
+body.dark-mode .sidebar {
+  background: #1f2937;
+}
+
+body.dark-mode .sidebar a {
+  color: #cbd5e1;
+}
+
+body.dark-mode .sidebar a:hover,
+body.dark-mode .sidebar a.active {
+  background: #374151;
+}
+
+body.dark-mode .main-content {
+  color: #e0e0e0;
+}
+
+body.dark-mode .data-table {
+  background: #1e1e1e;
+  color: #e0e0e0;
+}
+
+body.dark-mode .data-table:hover {
+  background: #2c2c2c;
+}
+
+body.dark-mode .data-table th,
+body.dark-mode .data-table td {
+  border-color: #333;
+}
+
+body.dark-mode .data-table thead {
+  background: #2c2c2c;
+}
+
+body.dark-mode .modal-content {
+  background: #1e1e1e;
+}
+
+body.dark-mode .modal-content p,
+body.dark-mode .modal-content label {
+  color: #e0e0e0;
+}
+
+body.dark-mode .modal-content input {
+  background: #2c2c2c;
+  color: #e0e0e0;
+  border-color: #444;
+}
+
+.lightColor {
+  color: #f3f4f6;
+}
+
+/* — Desktop: always show sidebar — */
+@media (min-width: 993px) {
+  .sidebar {
+    transform: translateX(0) !important;
+  }
+
+  .sidebar-toggle {
+    display: none !important;
+  }
+
+  .main-content {
+    margin-left: 220px !important;
+  }
+}
+
+/* — Mobile/Tablet: hide sidebar, show toggle — */
+@media (max-width: 992px) {
+  .sidebar {
+    transform: translateX(-100%);
+    padding-top: 70px;
+  }
+
+  .sidebar.open {
+    transform: translateX(0);
+  }
+
+  .sidebar-toggle {
+    display: block;
+  }
+
+  .header {
+    margin-top: 40px;
+  }
+
+  .main-content {
+    margin-left: 0 !important;
+  }
+
+  .main-content.shifted {
+    margin-left: 220px !important;
+  }
+
+  .btn-logout {
+    margin-right: 0px;
+  }
+}

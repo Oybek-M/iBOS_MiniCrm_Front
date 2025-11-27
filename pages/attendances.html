@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="uz">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Davomat - SmartCRM</title>
+    <link rel="stylesheet" href="../css/reset.css" />
+    <link rel="stylesheet" href="../css/main.css" />
+    <link rel="stylesheet" href="../css/students.css" />
+  </head>
+  <body>
+    <!-- Global Confirm Modal -->
+    <div id="globalModal" class="modal hidden">
+      <div class="modal-content">
+        <p id="modalMessage"></p>
+        <div class="modal-actions">
+          <button id="modalConfirm" class="btn-primary">Ha</button>
+          <button id="modalCancel">Bekor</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Create / Edit Attendance Modal (replace previous attendanceFormModal) -->
+    <div id="attendanceFormModal" class="modal hidden">
+      <div class="modal-content">
+        <h3 id="attendanceFormTitle">Yangi davomat yozuvi</h3>
+        <form id="attendanceForm">
+          <label for="attGroup">Guruh</label>
+          <select id="attGroup" required>
+            <option value="">- Tanlang -</option>
+          </select>
+
+          <label for="attTeacher">O'qituvchi</label>
+          <select id="attTeacher" required disabled>
+            <option value="0">- Avtomatik tanlanadi -</option>
+          </select>
+
+          <label for="attDate">Sana va vaqt</label>
+          <input id="attDate" type="datetime-local" required />
+
+          <hr />
+
+          <div style="display: flex; gap: 0.5rem; margin-bottom: 0.5rem">
+            <button
+              type="button"
+              id="setAllPresent"
+              class="btn-primary"
+              style="padding: 0.25rem 0.5rem"
+            >
+              Barchani Keldi
+            </button>
+            <button
+              type="button"
+              id="setAllAbsent"
+              class="btn-primary"
+              style="padding: 0.25rem 0.5rem"
+            >
+              Barchani Kelmadi
+            </button>
+            <button
+              type="button"
+              id="setAllLate"
+              class="btn-primary"
+              style="padding: 0.25rem 0.5rem"
+            >
+              Barchani Kech
+            </button>
+          </div>
+
+          <div
+            id="groupStudentsContainer"
+            style="
+              max-height: 300px;
+              overflow: auto;
+              border: 1px solid #eee;
+              padding: 0.5rem;
+              border-radius: 6px;
+            "
+          >
+            <!-- JS will render student rows here -->
+          </div>
+
+          <label for="attNote" style="margin-top: 0.5rem"
+            >Umumiy izoh (ixtiyoriy)</label
+          >
+          <input id="attNote" type="text" />
+
+          <div class="modal-actions" style="margin-top: 0.75rem">
+            <button type="submit" class="btn-primary">Saqlash</button>
+            <button type="button" id="attendanceFormCancel">Bekor</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- View Attendance Modal -->
+    <div id="attendanceViewModal" class="modal hidden">
+      <div class="modal-content">
+        <h3>Davomat tafsilotlari</h3>
+        <p><strong>O'quvchi:</strong> <span id="viewAStudent"></span></p>
+        <p><strong>O'qituvchi:</strong> <span id="viewATeacher"></span></p>
+        <p><strong>Sana:</strong> <span id="viewADate"></span></p>
+        <p><strong>Holat:</strong> <span id="viewAStatus"></span></p>
+        <p><strong>Izoh:</strong> <span id="viewANote"></span></p>
+        <div class="modal-actions">
+          <button id="attendanceViewClose">Yopish</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Toggles -->
+    <button id="themeToggle" class="theme-toggle">🌙</button>
+    <button id="sidebarToggle" class="sidebar-toggle">☰</button>
+
+    <div class="sidebar">
+      <ul>
+        <li><a href="./dashboard.html">Dashboard</a></li>
+        <li><a href="./admins.html">Adminlar</a></li>
+        <li><a href="./teachers.html">O'qituvchilar</a></li>
+        <li><a href="./students.html">O'quvchilar</a></li>
+        <li><a href="./groups.html">Guruhlar</a></li>
+        <li><a href="./attendances.html" class="active">Davomat</a></li>
+        <li><a href="./payments.html">To'lovlar</a></li>
+      </ul>
+    </div>
+
+    <div class="main-content">
+      <header class="header">
+        <h2>Davomat boshqaruvi</h2>
+        <button id="btnLogout" class="btn-logout">Chiqish</button>
+      </header>
+
+      <div class="toolbar">
+        <button id="btnAddAttendance" class="btn-primary">
+          + Yangi davomat
+        </button>
+        <select id="filterGroup">
+          <option value="">Hammasi (guruh bo'yicha)</option>
+        </select>
+        <select id="filterStatus">
+          <option value="">Barcha holatlar</option>
+          <option value="1">Keldi</option>
+          <option value="2">Kelmadi</option>
+          <option value="3">Kech qoldi</option>
+        </select>
+        <input
+          type="text"
+          id="attendanceSearch"
+          placeholder="Qidiruv (ism, telefon…)"
+        />
+      </div>
+
+      <table class="data-table" id="attTable">
+        <thead>
+          <tr>
+            <th>O'quvchi</th>
+            <th>O'qituvchi</th>
+            <th>Sana</th>
+            <th>Holat</th>
+            <th>Izoh</th>
+            <th>Amallar</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+
+    <script src="../js/lib/jquery.min.js"></script>
+    <script src="../js/main.js"></script>
+    <script src="../js/attendance.js"></script>
+  </body>
+</html>

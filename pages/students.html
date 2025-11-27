@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>O'quvchilar - SmartCRM</title>
+  <link rel="stylesheet" href="../css/reset.css">
+  <link rel="stylesheet" href="../css/main.css">
+  <link rel="stylesheet" href="../css/students.css">
+</head>
+<body>
+  <!-- Global Confirm Modal -->
+  <div id="globalModal" class="modal hidden">
+    <div class="modal-content">
+      <p id="modalMessage"></p>
+      <div class="modal-actions">
+        <button id="modalConfirm" class="btn-primary">Ha</button>
+        <button id="modalCancel">Bekor</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Student Form Modal -->
+  <div id="studentFormModal" class="modal hidden">
+    <div class="modal-content">
+      <h3 id="studentFormTitle">Yangi o'quvchi</h3>
+      <form id="studentForm">
+        <label for="sfFirstName">Ism</label>
+        <input id="sfFirstName" type="text" required>
+
+        <label for="sfLastName">Familya</label>
+        <input id="sfLastName" type="text" required>
+
+        <label for="sfPhoneNumber">Telefon</label>
+        <input 
+          id="sfPhoneNumber" 
+          type="text" 
+          required 
+          minlength="13" maxlength="13" 
+          pattern="^\+998\d{9}$" 
+          title="Telefon raqami +998901234567 formatida bo'lishi kerak">
+
+        <label for="sfPayment">Oylik to'lov (UZS)</label>
+        <input id="sfPayment" type="number" required>
+
+        <label for="sfDiscount">Chegirma (%)</label>
+        <input id="sfDiscount" type="number" required min="0" max="100">
+
+        <label for="sfGroup">Guruhni tanlang</label>
+        <select id="sfGroup" required>
+          <option value="">- Tanlang -</option>
+        </select>
+
+        <div class="modal-actions">
+          <button type="submit" class="btn-primary">Saqlash</button>
+          <button type="button" id="studentFormCancel">Bekor</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Student View Modal -->
+  <div id="studentViewModal" class="modal hidden">
+    <div class="modal-content">
+      <h3>O'quvchi tafsilotlari</h3>
+      <p><strong>Ism, Familya:</strong> <span id="viewSName"></span></p>
+      <p><strong>Telefon:</strong> <span id="viewSPhone"></span></p>
+      <p><strong>Oylik to'lov:</strong> <span id="viewSPay"></span> UZS</p>
+      <p><strong>Chegirma:</strong> <span id="viewSDisc"></span>%</p>
+      <p><strong>To'lov statusi:</strong> <span id="viewSStatus"></span></p>
+      <p><strong>Guruh:</strong> <span id="viewSGroup"></span></p>
+      <div class="modal-actions">
+        <button id="studentViewClose">Yopish</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toggles -->
+  <button id="themeToggle" class="theme-toggle" aria-label="Mavzuni o'zgartirish">🌙</button>
+  <button id="sidebarToggle" class="sidebar-toggle" aria-label="Menyuni ochish">☰</button>
+
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <ul>
+      <li><a href="./dashboard.html">Dashboard</a></li>
+      <li><a href="./admins.html">Adminlar</a></li>
+      <li><a href="./teachers.html">O'qituvchilar</a></li>
+      <li><a href="./students.html" class="active">O'quvchilar</a></li>
+      <li><a href="./groups.html">Guruhlar</a></li>
+        <li><a href="./attendances.html">Davomat</a></li>
+      <li><a href="./payments.html">To'lovlar</a></li>
+    </ul>
+  </div>
+
+  <!-- Main Content -->
+  <div class="main-content">
+    <header class="header">
+      <h2>O'quvchilar boshqaruvi</h2>
+      <button id="btnLogout" class="btn-logout">Chiqish</button>
+    </header>
+
+    <div class="toolbar">
+      <button id="btnAddStudent" class="btn-primary">+ Yangi o'quvchi</button>
+      <select id="filterStatus">
+        <option value="">Hammasi</option>
+        <option value="1">To'lov qilgan</option>
+        <option value="2">To'lov qilmagan</option>
+      </select>
+      <input type="text" id="studentSearch" placeholder="Qidiruv (ism, telefon…)">
+    </div>
+
+    <table class="data-table" id="studentsTable">
+      <thead>
+        <tr>
+          <th data-sort="firstName">Ism</th>
+          <th data-sort="lastName">Familya</th>
+          <th data-sort="phoneNumber">Telefon</th>
+          <th data-sort="paymentStatus">To'lov</th>
+          <th data-sort="groupName">Guruh</th>
+          <th>Amallar</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
+
+  <script src="../js/lib/jquery.min.js"></script>
+  <script src="../js/main.js"></script>
+  <script src="../js/students.js"></script>
+</body>
+</html>
