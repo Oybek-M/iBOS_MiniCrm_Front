@@ -7,6 +7,13 @@
     <link rel="stylesheet" href="../css/reset.css" />
     <link rel="stylesheet" href="../css/main.css" />
     <link rel="stylesheet" href="../css/students.css" />
+
+    <style>
+      select,
+      input {
+        margin: 5px 0px 10px 0px;
+      }
+    </style>
   </head>
   <body>
     <!-- Global Confirm Modal -->
@@ -24,7 +31,7 @@
     <div id="attendanceFormModal" class="modal hidden">
       <div class="modal-content">
         <h3 id="attendanceFormTitle">Yangi davomat yozuvi</h3>
-        <form id="attendanceForm">
+        <form id="attendanceForm" style="margin: 10px; padding: 10px">
           <label for="attGroup">Guruh</label>
           <select id="attGroup" required>
             <option value="">- Tanlang -</option>
@@ -63,7 +70,7 @@
               class="btn-primary"
               style="padding: 0.25rem 0.5rem"
             >
-              Barchani Kech
+              Barchani Kechqoldi
             </button>
           </div>
 
@@ -80,9 +87,9 @@
             <!-- JS will render student rows here -->
           </div>
 
-          <label for="attNote" style="margin-top: 0.5rem"
-            >Umumiy izoh (ixtiyoriy)</label
-          >
+          <label for="attNote" style="margin-top: 0.5rem">
+            Umumiy izoh (ixtiyoriy)
+          </label>
           <input id="attNote" type="text" />
 
           <div class="modal-actions" style="margin-top: 0.75rem">

@@ -1,7 +1,7 @@
 // js/attendances.js (refactored)
 // Requires: jQuery, existing attendances.html with expected element IDs
 $(function () {
-  const API_BASE = "http://localhost:5070/api";
+  const API_BASE = "http://178.18.254.129:6001/api";
   const token = localStorage.getItem("jwtToken");
   if (!token) return (window.location.href = "../index.html");
 
@@ -410,7 +410,7 @@ $(function () {
           <div style="white-space:nowrap;display:grid;justify-items:endl">
             <label style="margin-right:.4rem"><input type="radio" name="st-${id}" value="1" checked> Keldi</label>
             <label style="margin-right:.4rem"><input type="radio" name="st-${id}" value="2"> Kelmadi</label>
-            <label><input type="radio" name="st-${id}" value="3"> Kech</label>
+            <label><input type="radio" name="st-${id}" value="3"> Kechqoldi</label>
           </div>
         </div>
       `);

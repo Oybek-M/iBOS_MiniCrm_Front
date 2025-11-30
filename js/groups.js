@@ -1,6 +1,6 @@
 // js/groups.js
 $(function () {
-  const API_BASE = window.API_BASE || "http://localhost:5070/api";
+  const API_BASE = window.API_BASE || "http://178.18.254.129:6001/api";
   const token = localStorage.getItem("jwtToken");
   if (!token) return window.location.href = "./index.html";
 

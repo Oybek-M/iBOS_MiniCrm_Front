@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="uz">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -28,9 +28,26 @@
     <div id="adminFormModal" class="modal hidden">
       <div class="modal-content">
         <h3 id="adminFormTitle">Yangi admin</h3>
-        <form id="adminForm">
+        <form id="adminForm" autocomplete="off">
           <div class="input-group">
-            <label for="adminUsername">Foydalanuvchi nomi</label>
+            <label for="adminFirstName">Ism</label>
+            <input id="adminFirstName" type="text" required minlength="1" />
+
+            <label for="adminLastName">Familya</label>
+            <input id="adminLastName" type="text" required minlength="1" />
+
+            <!-- <label for="adminPhoneNumber">Telefon raqami</label>
+            <input
+              id="adminPhoneNumber"
+              type="text"
+              required
+              minlength="13"
+              maxlength="13"
+              pattern="^\+998\d{9}$"
+              placeholder="+998901234567"
+            /> -->
+
+            <label for="adminUsername">Foydalanuvchi nomi (username)</label>
             <input
               id="adminUsername"
               type="text"
@@ -38,8 +55,7 @@
               minlength="4"
               placeholder="Kamida 4 ta belgidan"
             />
-          </div>
-          <div class="input-group password-wrapper">
+
             <label for="adminPassword">Parol</label>
             <input
               id="adminPassword"
@@ -48,23 +64,8 @@
               minlength="6"
               placeholder="Kamida 6 ta belgidan"
             />
-            <svg
-              id="toggleAdminPassword"
-              class="toggle-password"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-              xmlns="http://www.w3.org/2000/svg"
-              stroke-width="2"
-            >
-              <path
-                id="eyeOn"
-                d="M1.05 12C2.8 7.3 7.3 4 12 4s9.2 3.3 10.95 8C21.2 16.7 16.7 20 12 20S2.8 16.7 1.05 12z"
-              />
-              <circle id="pupil" cx="12" cy="12" r="3" />
-              <path id="eyeOff" d="M1 1l22 22" style="display: none" />
-            </svg>
           </div>
+
           <div class="modal-actions">
             <button type="submit" class="btn-primary">Saqlash</button>
             <button type="button" id="adminFormCancel">Bekor</button>
@@ -77,14 +78,40 @@
     <div id="editAdminModal" class="modal hidden">
       <div class="modal-content">
         <h3>Adminni tahrirlash</h3>
-        <form id="editAdminForm">
+        <form id="editAdminForm" autocomplete="off">
           <div class="input-group">
-            <label for="editUsername">Foydalanuvchi nomi</label>
+            <label for="editFirstName">Ism</label>
+            <input id="editFirstName" type="text" required minlength="1" />
+
+            <label for="editLastName">Familya</label>
+            <input id="editLastName" type="text" required minlength="1" />
+
+            <label for="editUsername">Admin nomi (username)</label>
             <input id="editUsername" type="text" required minlength="4" />
 
-            <label for="editPassword">Foydalanuvchi paroli</label>
-            <input id="editPassword" type="password" minlength="6" />
+            <!-- <label for="editPhoneNumber">Telefon raqami</label>
+            <input
+              id="editPhoneNumber"
+              type="text"
+              required
+              minlength="13"
+              maxlength="13"
+              pattern="^\+998\d{9}$"
+              placeholder="+998901234567"
+            /> -->
+
+            <p style="margin-top: 0.5rem; font-size: 0.9rem; color: #666">
+              Agar parolni o'zgartirmoqchi bo'lsangiz, eski va yangi parolni
+              to'ldiring. Aks holda bo'sh qoldiring.
+            </p>
+
+            <label for="editOldPassword">Eski parol</label>
+            <input id="editOldPassword" type="password" minlength="6" />
+
+            <label for="editNewPassword">Yangi parol</label>
+            <input id="editNewPassword" type="password" minlength="6" />
           </div>
+
           <div class="modal-actions">
             <button type="submit" class="btn-primary">Saqlash</button>
             <button type="button" id="editAdminCancel">Bekor</button>
@@ -117,7 +144,11 @@
 
       <div class="toolbar">
         <button id="btnAddAdmin" class="btn btn-primary">+ Yangi admin</button>
-        <input type="text" id="adminSearch" placeholder="Qidiruv (nomi)" />
+        <input
+          type="text"
+          id="adminSearch"
+          placeholder="Qidiruv (ism yoki login)"
+        />
       </div>
 
       <table class="data-table" id="adminsTable">
@@ -135,13 +166,5 @@
     <script src="../js/lib/jquery.min.js"></script>
     <script src="../js/main.js"></script>
     <script src="../js/admins.js"></script>
-    <script>
-      $("#toggleAdminPassword").on("click", function () {
-        const $pw = $("#adminPassword");
-        const type = $pw.attr("type") === "password" ? "text" : "password";
-        $pw.attr("type", type);
-        $("#eyeOff").toggle(type === "text");
-      });
-    </script>
   </body>
 </html>

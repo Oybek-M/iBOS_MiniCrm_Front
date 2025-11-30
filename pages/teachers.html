@@ -24,16 +24,17 @@
       </div>
     </div>
 
-    <!-- Teacher Form Modal -->
+    <!-- Teacher Form Modal (Create / Edit) -->
     <div id="teacherFormModal" class="modal hidden">
       <div class="modal-content">
-        <h1 id="teacherFormTitle"><b>Yangi o‘qituvchi</b></h1>
-        <br />
+        <h3 id="teacherFormTitle"><b>Yangi o'qituvchi</b></h3>
         <form id="teacherForm">
           <label for="tfFirstName">Ismi</label>
           <input id="tfFirstName" type="text" required />
+
           <label for="tfLastName">Familyasi</label>
           <input id="tfLastName" type="text" required />
+
           <label for="tfPhoneNumber">Telefon raqami</label>
           <input
             id="tfPhoneNumber"
@@ -45,7 +46,27 @@
             pattern="^\+998\d{9}$"
             title="Telefon raqami +998901234567 formatida bo'lishi kerak"
           />
-          <div class="modal-actions">
+
+          <!-- New fields for auth -->
+          <label for="tfUserName">User name (login)</label>
+          <input id="tfUserName" type="text" required minlength="4" />
+
+          <label for="tfPassword" id="tfPasswordLabel">Parol</label>
+          <input id="tfPassword" type="password" minlength="6" required />
+
+          <!-- For edit only: old/new password (optional) -->
+          <div
+            id="passwordChangeSection"
+            style="display: none; margin-top: 0.5rem"
+          >
+            <label for="tfOldPassword">Eski parol (agar o'zgartirilsa)</label>
+            <input id="tfOldPassword" type="password" minlength="6" />
+
+            <label for="tfNewPassword">Yangi parol</label>
+            <input id="tfNewPassword" type="password" minlength="6" />
+          </div>
+
+          <div class="modal-actions" style="margin-top: 0.6rem">
             <button type="submit" class="btn-primary">Saqlash</button>
             <button type="button" id="teacherFormCancel">Bekor</button>
           </div>
@@ -57,16 +78,14 @@
     <div id="teacherViewModal" class="modal hidden">
       <div class="modal-content">
         <h3>O'qituvchi tafsilotlari</h3>
-        <br />
-        <p>
-          <strong>Ism, Familya:</strong> <br />
-          <span id="viewName"></span>
-        </p>
+        <p><strong>Ism, Familya:</strong> <br /><span id="viewName"></span></p>
         <p><strong>Telefon:</strong> <span id="viewPhone"></span></p>
+        <p>
+          <strong>Login (username):</strong> <span id="viewUserName"></span>
+        </p>
         <p><strong>Guruhlar:</strong></p>
         <ul id="viewGroupsList"></ul>
-        <br />
-        <div class="modal-actions">
+        <div class="modal-actions" style="margin-top: 0.6rem">
           <button id="teacherViewClose">Yopish</button>
         </div>
       </div>

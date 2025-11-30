@@ -1,6 +1,6 @@
 // js/main.js
 $(function () {
-  const API_BASE = 'http://localhost:5070/api'; // API bazasi URL
+  const API_BASE = 'http://178.18.254.129:6001/api'; // API bazasi URL
 
   /**
    * JWT tokenni localStorage'dan olish

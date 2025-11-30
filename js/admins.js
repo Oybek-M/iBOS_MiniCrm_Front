@@ -1,10 +1,10 @@
 // js/admins.js
 $(function () {
-  const API_BASE = "http://localhost:5070/api";
+  const API_BASE = "http://178.18.254.129:6001/api";
   const token = localStorage.getItem("jwtToken");
   if (!token) return (window.location.href = "../index.html");
 
-  /* ——— HELPERS ——— */
+  /* helpers */
   function parseJwt(t) {
     try {
       return JSON.parse(atob(t.split(".")[1]));
@@ -12,6 +12,46 @@ $(function () {
       return {};
     }
   }
+
+  function ajaxPromise(options) {
+    return new Promise((resolve, reject) => {
+      $.ajax(options)
+        .done((data, textStatus, jqXHR) => resolve({ data, textStatus, jqXHR }))
+        .fail((jqXHR, textStatus, errorThrown) =>
+          reject({ jqXHR, textStatus, errorThrown })
+        );
+    });
+  }
+
+  function extractErrorMessage(err) {
+    if (!err) return "Noma'lum xatolik";
+    const jq = err.jqXHR || err;
+    if (jq && jq.responseJSON) {
+      const r = jq.responseJSON;
+      if (r.Message || r.message) return r.Message || r.message;
+      // ASP.NET Core ValidationProblemDetails
+      if (r.errors) {
+        // join first field messages
+        const msgs = [];
+        for (const k in r.errors) {
+          if (Array.isArray(r.errors[k]))
+            msgs.push(`${k}: ${r.errors[k].join(", ")}`);
+        }
+        if (msgs.length) return msgs.join(" | ");
+      }
+      return JSON.stringify(r);
+    }
+    if (jq && jq.responseText) {
+      try {
+        const p = JSON.parse(jq.responseText);
+        return p.Message || p.message || jq.responseText;
+      } catch {
+        return jq.responseText;
+      }
+    }
+    return err.statusText || "Xatolik yuz berdi";
+  }
+
   function showConfirm(msg, onYes, onNo) {
     $("#modalMessage").text(msg);
     $("#globalModal").removeClass("hidden");
@@ -28,72 +68,86 @@ $(function () {
         onNo && onNo();
       });
   }
-  function applyDark(on) {
-    $("body").toggleClass("dark-mode", on);
-    $("#themeToggle").text(on ? "☀️" : "🌙");
-  }
-  function initSidebar() {
-    $("#sidebarToggle").on("click", () => {
-      $(".sidebar").toggleClass("open");
-      $(".main-content").toggleClass("shifted");
-      $("#sidebarToggle").toggleClass("lightColor");
-    });
-    $(window).on("resize", () => {
-      if (window.innerWidth >= 993) {
-        $(".sidebar, .main-content").removeClass("open shifted");
-        $("#sidebarToggle").removeClass("lightColor");
-      }
-    });
+
+  function showAlert(msg, okCb) {
+    $("#modalMessage").text(msg);
+    $("#globalModal").removeClass("hidden");
+    $("#modalCancel").hide();
+    $("#modalConfirm")
+      .off("click")
+      .on("click", () => {
+        $("#globalModal").addClass("hidden");
+        $("#modalCancel").show();
+        okCb && okCb();
+      });
   }
 
-  /* ——— UI INIT ——— */
+  /* UI init */
   const me = parseJwt(token);
   $("#userName").text(me.username || "User");
   const darkStored = localStorage.getItem("darkMode") === "true";
-  applyDark(darkStored);
+  $("body").toggleClass("dark-mode", darkStored);
   $("#themeToggle").on("click", () => {
     const now = !$("body").hasClass("dark-mode");
-    applyDark(now);
+    $("body").toggleClass("dark-mode", now);
+    $("#themeToggle").text(now ? "☀️" : "🌙");
     localStorage.setItem("darkMode", now);
   });
-  $("#btnLogout")
-    .off("click")
-    .on("click", () => {
-      showConfirm(
-        "Chiqishni tasdiqlaysizmi?",
-        () => {
-          localStorage.removeItem("jwtToken");
-          window.location.href = "../index.html";
-        },
-        null
-      );
-    });
-  initSidebar();
 
-  /* ——— STATE ——— */
+  $("#sidebarToggle").on("click", () => {
+    $(".sidebar").toggleClass("open");
+    $(".main-content").toggleClass("shifted");
+    $("#sidebarToggle").toggleClass("lightColor");
+  });
+  $(window).on("resize", () => {
+    if (window.innerWidth >= 993) {
+      $(".sidebar, .main-content").removeClass("open shifted");
+      $("#sidebarToggle").removeClass("lightColor");
+    }
+  });
+
+  $("#btnLogout").on("click", () =>
+    showConfirm(
+      "Chiqishni tasdiqlaysizmi?",
+      () => {
+        localStorage.removeItem("jwtToken");
+        window.location.href = "../index.html";
+      },
+      null
+    )
+  );
+
+  /* state */
   let admins = [],
-    editId = null;
+    editId = null,
+    currentSearch = "";
 
-  /* ——— LOAD ADMINS ——— */
-  function loadAdmins() {
-    $.ajax({
-      url: `${API_BASE}/users/admins`,
-      method: "GET",
-      headers: { Authorization: `Bearer ${token}` },
-      success(data) {
-        const arr = Array.isArray(data.$values) ? data.$values : [];
-        admins = arr.map((a) => ({
-          id: a.id,
-          username: a.username,
-          isActive: a.isActive,
-        }));
-        renderTable(admins);
-      },
-      error() {
-        showConfirm("Adminlar ro‘yxatini olishda xatolik.", null, null);
-      },
-    });
+  /* load admins */
+  async function loadAdmins() {
+    try {
+      const res = await ajaxPromise({
+        url: `${API_BASE}/users/admins`,
+        method: "GET",
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      // support $values wrappers
+      const arr = Array.isArray(res.data.$values)
+        ? res.data.$values
+        : Array.isArray(res.data)
+        ? res.data
+        : [];
+      admins = arr.map((a) => ({
+        id: a.id,
+        username: a.username || a.userName || "",
+        isActive: !!a.isActive,
+      }));
+      renderTable(admins);
+    } catch (err) {
+      console.error(err);
+      showAlert("Adminlar ro'yxati olinmadi: " + extractErrorMessage(err));
+    }
   }
+
   function renderTable(list) {
     const $b = $("#adminsTable tbody").empty();
     list.forEach((a) => {
@@ -105,17 +159,19 @@ $(function () {
             <button class="actBtn edit-btn">✏️</button>
             <button class="actBtn del-btn">🗑️</button>
           </td>
-        </tr>`);
+        </tr>
+      `);
     });
   }
 
-  /* ——— SEARCH ——— */
   $("#adminSearch").on("input", function () {
-    const q = $(this).val().toLowerCase().trim();
-    renderTable(admins.filter((a) => a.username.toLowerCase().includes(q)));
+    currentSearch = $(this).val().toLowerCase().trim();
+    renderTable(
+      admins.filter((a) => a.username.toLowerCase().includes(currentSearch))
+    );
   });
 
-  /* ——— CREATE ADMIN ——— */
+  /* CREATE admin */
   $("#btnAddAdmin").on("click", () => {
     editId = null;
     $("#adminForm")[0].reset();
@@ -125,241 +181,179 @@ $(function () {
   $("#adminFormCancel").on("click", () =>
     $("#adminFormModal").addClass("hidden")
   );
-  $("#adminForm").on("submit", function (e) {
+
+  $("#adminForm").on("submit", async function (e) {
     e.preventDefault();
     const payload = {
-      username: $("#adminUsername").val(),
-      password: $("#adminPassword").val(),
+      firstName: String($("#adminFirstName").val() || "").trim(),
+      lastName: String($("#adminLastName").val() || "").trim(),
+      phoneNumber: String($("#adminPhoneNumber").val() || "").trim(),
+      username: String($("#adminUsername").val() || "").trim(),
+      password: String($("#adminPassword").val() || "").trim(),
     };
+
+    // basic validation client-side
+    if (
+      !payload.firstName ||
+      !payload.lastName ||
+      !payload.phoneNumber ||
+      !payload.username ||
+      payload.username.length < 4 ||
+      !payload.password ||
+      payload.password.length < 6
+    ) {
+      showAlert(
+        "Iltimos, barcha maydonlarni to'ldiring (username >=4, password >=6, phone +998...)."
+      );
+      return;
+    }
+
     $("#adminFormModal").addClass("hidden");
     showConfirm(
       "Yangi admin saqlansinmi?",
-      () => {
-        $.ajax({
-          url: `${API_BASE}/auth/register/admin`,
-          method: "POST",
-          headers: { Authorization: `Bearer ${token}` },
-          contentType: "application/json",
-          data: JSON.stringify(payload),
-          success() {
-            loadAdmins();
-          },
-          error(xhr) {
-            const msg = xhr.responseJSON?.Message || "Xatolik yuz berdi";
-            showConfirm(
-              msg,
-              () => $("#adminFormModal").removeClass("hidden"),
-              null
-            );
-          },
-        });
+      async () => {
+        try {
+          await ajaxPromise({
+            url: `${API_BASE}/auth/register/admin`,
+            method: "POST",
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json",
+            },
+            contentType: "application/json",
+            data: JSON.stringify(payload),
+          });
+          await loadAdmins();
+        } catch (err) {
+          console.error("Create admin error:", err);
+          const msg = extractErrorMessage(err);
+          showConfirm(
+            msg,
+            () => $("#adminFormModal").removeClass("hidden"),
+            null
+          );
+        }
       },
-      null
+      () => $("#adminFormModal").removeClass("hidden")
     );
   });
 
-  /* ——— EDIT ADMIN ——— */
-  $("#adminsTable").on("click", ".edit-btn", function () {
+  /* EDIT open */
+  $("#adminsTable").on("click", ".edit-btn", async function () {
     editId = $(this).closest("tr").data("id");
-    $("#editAdminForm")[0].reset();
-    //$("#adminFormTitle").text("Adminni tahrirlash"); // not relevant for edit modal
-    $.ajax({
-      url: `${API_BASE}/users/${editId}`,
-      method: "GET",
-      headers: { Authorization: `Bearer ${token}` },
-      success(admin) {
-        $("#editUsername").val(admin.username);
-        $("#editPassword").val(""); // clear password field for security
-        $("#editAdminModal").removeClass("hidden");
-      },
-      error() {
-        showAlert("Admin ma'lumotini yuklashda xatolik.");
-      },
-    });
+    try {
+      const res = await ajaxPromise({
+        url: `${API_BASE}/users/${editId}`,
+        method: "GET",
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      const u = res.data;
+      $("#editFirstName").val(u.firstName || "");
+      $("#editLastName").val(u.lastName || "");
+      $("#editUsername").val(u.username || u.userName || "");
+      // $("#editPhoneNumber").val(u.phoneNumber || u.PhoneNumber);
+      $("#editOldPassword").val("");
+      $("#editNewPassword").val("");
+      $("#editAdminModal").removeClass("hidden");
+    } catch (err) {
+      console.error(err);
+      showAlert("Admin ma'lumotlari olinmadi: " + extractErrorMessage(err));
+    }
   });
+
   $("#editAdminCancel").on("click", () =>
     $("#editAdminModal").addClass("hidden")
   );
 
-  // Helper: call change username (PUT)
-  function changeUsername(id, newUsername) {
-    // console.log("Username: ", newUsername);
-
-    return $.ajax({
-      url: `${API_BASE}/users/${id}`,
-      method: "PUT",
-      headers: { Authorization: `Bearer ${token}` },
-      contentType: "application/json",
-      data: JSON.stringify({ username: newUsername }),
-    });
-  }
-
-  function ajaxPromise(options) {
-    return new Promise((resolve, reject) => {
-      $.ajax(options)
-        .done((data, textStatus, jqXHR) => resolve({ data, textStatus, jqXHR }))
-        .fail((jqXHR, textStatus, errorThrown) => {
-          reject({ jqXHR, textStatus, errorThrown });
-        });
-    });
-  }
-
-  function extractErrorMessage(err) {
-    // err yakka obyekt bo'lishi mumkin: jqXHR, { jqXHR, ... }, yoki { status, responseText }, yoki string
-    // 1) if we have normalized wrapper
-    if (err && err.jqXHR) {
-      const jq = err.jqXHR;
-      if (
-        jq.responseJSON &&
-        (jq.responseJSON.Message || jq.responseJSON.message)
-      ) {
-        return jq.responseJSON.Message || jq.responseJSON.message;
-      }
-      if (jq.responseText) {
-        try {
-          const parsed = JSON.parse(jq.responseText);
-          return parsed.Message || parsed.message || jq.responseText;
-        } catch {
-          return jq.responseText;
-        }
-      }
-      return jq.statusText || `HTTP ${jq.status || "error"}`;
-    }
-
-    // 2) if it's raw jqXHR
-    if (err && err.responseJSON) {
-      return (
-        err.responseJSON.Message ||
-        err.responseJSON.message ||
-        JSON.stringify(err.responseJSON)
-      );
-    }
-    if (err && err.responseText) {
-      try {
-        const parsed = JSON.parse(err.responseText);
-        return parsed.Message || parsed.message || err.responseText;
-      } catch {
-        return err.responseText;
-      }
-    }
-
-    // 3) if it's an object with status / text
-    if (err && typeof err === "object") {
-      if (err.status && err.statusText)
-        return `${err.status} ${err.statusText}`;
-      if (err.message) return err.message;
-      // fallback: stringify
-      try {
-        return JSON.stringify(err);
-      } catch {
-        /* ignore */
-      }
-    }
-
-    // 4) if it's a string or anything else
-    if (typeof err === "string") return err;
-    return "Noma'lum xatolik yuz berdi";
-  }
-
-  // Helper: call change password (PATCH)
-  function changePassword(id, newPassword) {
-    // console.log("Password: ", newPassword);
-
-    // NOTE: adjust payload key if backend expects different DTO (e.g. { newPassword } or { Password })
-    return $.ajax({
-      url: `${API_BASE}/users/${id}/change-password`,
-      method: "PATCH",
-      headers: { Authorization: `Bearer ${token}` },
-      contentType: "application/json",
-      data: JSON.stringify({ NewPassword: newPassword }),
-    });
-  }
-
-  $("#editAdminForm").on("submit", function (e) {
+  /* EDIT submit (PUT /users/{id}) */
+  $("#editAdminForm").on("submit", async function (e) {
     e.preventDefault();
-
-    const newUsername = $("#editUsername").val()?.toString().trim();
-    const newPassword = $("#editPassword").val()?.toString();
-
-    // Basic validation
-    if (
-      (!newUsername || newUsername.length < 4) &&
-      (!newPassword || newPassword.length < 6)
-    ) {
-      showAlert(
-        "Iltimos, kamida 4 belgili username yoki kamida 6 belgili password kiriting."
-      );
+    if (!editId) {
+      showAlert("Tahrirlash uchun ID topilmadi.");
       return;
+    }
+
+    const dto = {
+      firstName: String($("#editFirstName").val() || "").trim(),
+      lastName: String($("#editLastName").val() || "").trim(),
+      username: String($("#editUsername").val() || "").trim(),
+      // phoneNumber: String($("#editPhoneNumber").val || "").trim()
+    };
+
+    const oldP = String($("#editOldPassword").val() || "").trim();
+    const newP = String($("#editNewPassword").val() || "").trim();
+
+    if (
+      !dto.firstName ||
+      !dto.lastName ||
+      !dto.username ||
+      dto.username.length < 4
+    ) {
+      showAlert("Ism, familya va kamida 4 belgili username kiriting.");
+      return;
+    }
+
+    if (oldP && newP) {
+      if (oldP.length < 6 || newP.length < 6) {
+        showAlert("Parollar kamida 6 belgidan bo'lishi kerak.");
+        return;
+      }
+      dto.oldPassword = oldP;
+      dto.newPassword = newP;
     }
 
     $("#editAdminModal").addClass("hidden");
     showConfirm(
       "O'zgartirishlarni saqlaysizmi?",
-      () => {
-        // Decide what to call: username only, password only, or both.
-        const ops = [];
-
-        if (newUsername && newUsername.length >= 4) {
-          ops.push(changeUsername(editId, newUsername));
-        }
-
-        if (newPassword && newPassword.length >= 6) {
-          ops.push(changePassword(editId, newPassword));
-        }
-
-        if (ops.length === 0) {
-          showAlert("O'zgartirish uchun qiymat topilmadi.", () =>
-            $("#editAdminModal").removeClass("hidden")
+      async () => {
+        try {
+          await ajaxPromise({
+            url: `${API_BASE}/users/${editId}`,
+            method: "PUT",
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json",
+            },
+            contentType: "application/json",
+            data: JSON.stringify(dto),
+          });
+          showAlert("O'zgartirishlar saqlandi.", () => loadAdmins());
+        } catch (err) {
+          console.error("Update admin error:", err);
+          const msg = extractErrorMessage(err);
+          showConfirm(
+            msg,
+            () => $("#editAdminModal").removeClass("hidden"),
+            null
           );
-          return;
         }
-
-        // Execute ops in sequence to handle responses cleanly (username first, then password)
-        // Convert jQuery promises to native Promise
-        (async () => {
-          try {
-            for (let i = 0; i < ops.length; i++) {
-              await ops[i];
-            }
-            showAlert("O'zgartirishlar saqlandi.", () => loadAdmins());
-          } catch (err) {
-            console.error("Edit operation failed (detailed):", err);
-            const msg = extractErrorMessage(err);
-            showConfirm(
-              msg,
-              () => $("#editAdminModal").removeClass("hidden"),
-              null
-            );
-          }
-        })();
       },
       () => $("#editAdminModal").removeClass("hidden")
     );
   });
 
-  /* ——— DELETE ADMIN ——— */
+  /* DELETE */
   $("#adminsTable").on("click", ".del-btn", function () {
     const id = $(this).closest("tr").data("id");
     showConfirm(
-      "Adminni o‘chirasizmi?",
-      () => {
-        $.ajax({
-          url: `${API_BASE}/users/${id}`,
-          method: "DELETE",
-          headers: { Authorization: `Bearer ${token}` },
-          success() {
-            loadAdmins();
-          },
-          error(xhr) {
-            const msg = xhr.responseJSON?.Message || "Xatolik yuz berdi";
-            showConfirm(msg, null, null);
-          },
-        });
+      "Adminni o'chirasizmi?",
+      async () => {
+        try {
+          await ajaxPromise({
+            url: `${API_BASE}/users/${id}`,
+            method: "DELETE",
+            headers: { Authorization: `Bearer ${token}` },
+          });
+          await loadAdmins();
+        } catch (err) {
+          console.error(err);
+          showAlert("O'chirishda xatolik: " + extractErrorMessage(err));
+        }
       },
       null
     );
   });
 
-  /* ——— INITIAL LOAD ——— */
+  /* initial load */
   loadAdmins();
 });
