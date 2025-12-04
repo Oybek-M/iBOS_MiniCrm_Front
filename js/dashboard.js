@@ -1,6 +1,6 @@
 // js/dashboard.js
 $(function () {
-	const API_BASE = window.API_BASE || "http://178.18.254.129:6001/api";
+	const API_BASE = "http://crm.ibos.uz/api";
 	const token = localStorage.getItem("jwtToken");
 	if (!token) {
 		window.location.href = "../index.html";

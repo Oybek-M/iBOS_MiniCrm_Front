@@ -1,7 +1,7 @@
 // js/attendances.js (refactored)
 // Requires: jQuery, existing attendances.html with expected element IDs
 $(function () {
-  const API_BASE = "http://178.18.254.129:6001/api";
+  const API_BASE = "http://crm.ibos.uz/api";
   const token = localStorage.getItem("jwtToken");
   if (!token) return (window.location.href = "../index.html");
 
@@ -147,6 +147,26 @@ $(function () {
     );
   });
   initSidebar();
+
+  /* ——— DETERMINE ROLE & FETCH ——— */
+  let isSuper = false;
+  $.ajax({
+    url: `${API_BASE}/users/role`,
+    method: "GET",
+    headers: { Authorization: `Bearer ${token}` },
+    success(res) {
+      const role = res?.role || res;
+      isSuper = String(role).toLowerCase() === "superadministrator";
+      $("#adminsCard").toggle(isSuper);
+      $('.sidebar a[href="./admins.html"]').closest("li").toggle(isSuper);
+      isSuper ? fetchSuperStats() : fetchAdminStats();
+    },
+    error() {
+      isSuper = false;
+      $("#adminsCard, .sidebar a[href='./admins.html']").closest("li").hide();
+      fetchAdminStats();
+    },
+  });
 
   /* -------------------- Load support lists -------------------- */
   function loadGroups() {

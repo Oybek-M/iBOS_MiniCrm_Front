@@ -1,6 +1,6 @@
 // js/main.js
 $(function () {
-  const API_BASE = 'http://178.18.254.129:6001/api'; // API bazasi URL
+  const API_BASE = "http://crm.ibos.uz/api";
 
   /**
    * JWT tokenni localStorage'dan olish

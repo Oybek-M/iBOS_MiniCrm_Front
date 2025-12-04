@@ -1,6 +1,6 @@
 // js/admins.js
 $(function () {
-  const API_BASE = "http://178.18.254.129:6001/api";
+  const API_BASE = "http://crm.ibos.uz/api";
   const token = localStorage.getItem("jwtToken");
   if (!token) return (window.location.href = "../index.html");
 
@@ -187,26 +187,24 @@ $(function () {
     const payload = {
       firstName: String($("#adminFirstName").val() || "").trim(),
       lastName: String($("#adminLastName").val() || "").trim(),
-      phoneNumber: String($("#adminPhoneNumber").val() || "").trim(),
       username: String($("#adminUsername").val() || "").trim(),
       password: String($("#adminPassword").val() || "").trim(),
     };
 
     // basic validation client-side
-    if (
-      !payload.firstName ||
-      !payload.lastName ||
-      !payload.phoneNumber ||
-      !payload.username ||
-      payload.username.length < 4 ||
-      !payload.password ||
-      payload.password.length < 6
-    ) {
-      showAlert(
-        "Iltimos, barcha maydonlarni to'ldiring (username >=4, password >=6, phone +998...)."
-      );
-      return;
-    }
+    // if (
+    //   !payload.firstName ||
+    //   !payload.lastName ||
+    //   !payload.username ||
+    //   !payload.username.length < 4 ||
+    //   !payload.password ||
+    //   payload.password.length < 6
+    // ) {
+    //   showAlert(
+    //     "Iltimos, barcha maydonlarni to'ldiring."
+    //   );
+    //   return;
+    // }
 
     $("#adminFormModal").addClass("hidden");
     showConfirm(
